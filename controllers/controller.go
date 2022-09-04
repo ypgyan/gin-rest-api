@@ -41,8 +41,13 @@ func Greetings(c *gin.Context) {
 // @Router       /students [post]
 func CreateStudent(c *gin.Context) {
 	var student models.Student
-
 	if err := c.ShouldBindJSON(&student); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	if err := models.Validate(&student); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -83,13 +88,6 @@ func DeleteStudent(c *gin.Context) {
 	id := c.Params.ByName("id")
 	database.DB.Delete(&student, id)
 
-	if student.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "Student Not Found",
-		})
-		return
-	}
-
 	c.JSON(200, student)
 }
 
@@ -111,6 +109,13 @@ func UpdateStudent(c *gin.Context) {
 	database.DB.First(&student, id)
 
 	if err := c.ShouldBindJSON(&student); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := models.Validate(&student); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
