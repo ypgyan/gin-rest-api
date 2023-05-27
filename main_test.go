@@ -3,16 +3,17 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
-	"github.com/ypgyan/api-go-gin/controllers"
-	"github.com/ypgyan/api-go-gin/database"
-	"github.com/ypgyan/api-go-gin/models"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"github.com/ypgyan/api-go-gin/controllers"
+	"github.com/ypgyan/api-go-gin/database"
+	"github.com/ypgyan/api-go-gin/models"
 )
 
 var ID uint
@@ -121,7 +122,7 @@ func TestUpdateStudent(t *testing.T) {
 
 	student := models.Student{Name: "Test Student", CPF: "12312345678", RG: "123123123"}
 	body, _ := json.Marshal(student)
-	req, _ := http.NewRequest("PATCH", pathUrl, bytes.NewBuffer(body))
+	req, _ := http.NewRequest("PUT", pathUrl, bytes.NewBuffer(body))
 	res := httptest.NewRecorder()
 	r.ServeHTTP(res, req)
 
